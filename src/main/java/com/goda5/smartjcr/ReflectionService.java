@@ -25,14 +25,11 @@ public class ReflectionService {
     public Map<Method, String> getAllMethodsWithFieldNames(Class<?> type) {
         List<Method> allMethods = getAllMethods(new ArrayList<>(), type);
         return allMethods.stream().map((Function<Method, Optional<Map.Entry<Method, String>>>) method -> {
-            try {
-                if (getFieldNameForMethod(method).isPresent()) {
-                    return Optional.of(new AbstractMap.SimpleImmutableEntry<>(method, getFieldNameForMethod(method).get()));
-                }
-            } catch (IntrospectionException e) {
-                e.printStackTrace();
+            if (getFieldNameForMethod(method).isPresent()) {
+                return Optional.of(new AbstractMap.SimpleImmutableEntry<>(method, getFieldNameForMethod(method).get()));
+            } else {
+                return Optional.empty();
             }
-            return Optional.empty();
         }).filter(Optional::isPresent)
                 .collect(Collectors.toMap(p -> p.get().getKey(), p -> p.get().getValue()));
     }
@@ -45,14 +42,19 @@ public class ReflectionService {
         return methods;
     }
 
-    public Optional<String> getFieldNameForMethod(Method method) throws IntrospectionException {
+    public Optional<String> getFieldNameForMethod(Method method) {
         Class<?> clazz = method.getDeclaringClass();
-        BeanInfo info = Introspector.getBeanInfo(clazz);
-        PropertyDescriptor[] props = info.getPropertyDescriptors();
-        for (PropertyDescriptor pd : props) {
-            if (method.equals(pd.getWriteMethod()) || method.equals(pd.getReadMethod())) {
-                return Optional.of(pd.getName());
+        BeanInfo info;
+        try {
+            info = Introspector.getBeanInfo(clazz);
+            PropertyDescriptor[] props = info.getPropertyDescriptors();
+            for (PropertyDescriptor pd : props) {
+                if (method.equals(pd.getWriteMethod()) || method.equals(pd.getReadMethod())) {
+                    return Optional.of(pd.getName());
+                }
             }
+        } catch (IntrospectionException e) {
+            e.printStackTrace();
         }
         return Optional.empty();
     }
