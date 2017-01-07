@@ -27,8 +27,8 @@ public class ReflectionService {
         return allMethods.stream()
                 .map(method ->
                         getFieldNameForMethod(method)
-                                .map((Function<String, Optional<Map.Entry<Method, String>>>) s ->
-                                        Optional.of(new AbstractMap.SimpleImmutableEntry<>(method, s)))
+                                .map((Function<String, Optional<Map.Entry<Method, String>>>) fieldName ->
+                                        Optional.of(new AbstractMap.SimpleImmutableEntry<>(method, fieldName)))
                                 .orElse(Optional.empty()))
                 .filter(Optional::isPresent)
                 .collect(Collectors.toMap(e -> e.get().getKey(), e -> e.get().getValue()));
@@ -48,11 +48,14 @@ public class ReflectionService {
         try {
             info = Introspector.getBeanInfo(clazz);
             PropertyDescriptor[] props = info.getPropertyDescriptors();
-            for (PropertyDescriptor pd : props) {
+            return Arrays.stream(props)
+                    .map(pd -> {
                 if (method.equals(pd.getWriteMethod()) || method.equals(pd.getReadMethod())) {
-                    return Optional.of(pd.getName());
+                    return pd.getName();
+                } else {
+                    return null;
                 }
-            }
+            }).findFirst();
         } catch (IntrospectionException e) {
             e.printStackTrace();
         }
