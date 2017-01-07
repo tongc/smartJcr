@@ -1,6 +1,6 @@
 package com.goda5.smartjcr;
 
-class JcrServiceTest {
+public class JcrServiceTest {
     public void shouldSetProperties() {
 
     }
