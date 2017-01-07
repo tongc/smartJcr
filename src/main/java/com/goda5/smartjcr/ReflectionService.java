@@ -2,10 +2,7 @@ package com.goda5.smartjcr;
 
 import jdk.nashorn.internal.ir.annotations.Immutable;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
+import java.beans.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -48,13 +45,10 @@ public class ReflectionService {
         try {
             info = Introspector.getBeanInfo(clazz);
             PropertyDescriptor[] props = info.getPropertyDescriptors();
-            return Arrays.stream(props).map(pd -> {
-                if (method.equals(pd.getWriteMethod()) || method.equals(pd.getReadMethod())) {
-                    return pd.getName();
-                } else {
-                    return null;
-                }
-            }).findFirst();
+            return Arrays.stream(props)
+                    .filter(pd -> method.equals(pd.getWriteMethod()) || method.equals(pd.getReadMethod()))
+                    .map(FeatureDescriptor::getName)
+                    .findFirst();
         } catch (IntrospectionException e) {
             e.printStackTrace();
         }
