@@ -13,8 +13,18 @@ public class JcrService {
     }
 
     public Node setProperties(Node node, Object object) throws RepositoryException {
-        Map<Method, String> methodsWithFieldNamesAnnotationWith = reflectionService.getMethodsWithFieldNamesAnnotationWith(object, JcrProperty.class);
-        methodsWithFieldNamesAnnotationWith.forEach((method, name) -> {
+        Map<Method, String> jcrPropertyMethods = reflectionService.getMethodsWithFieldNamesAnnotationWith(object, JcrProperty.class);
+        Map<Method, String> jcrNodeMethods = reflectionService.getMethodsWithFieldNamesAnnotationWith(object, JcrNode.class);
+        jcrNodeMethods.forEach((method, name) -> {
+            try {
+                Node subNode = node.addNode(name);
+                setProperties(subNode, method.invoke(object));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        jcrPropertyMethods.forEach((method, name) -> {
             try {
                 node.setProperty(name, String.valueOf(method.invoke(object)));
             } catch (Exception e) {
