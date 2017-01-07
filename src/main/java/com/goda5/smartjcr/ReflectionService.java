@@ -24,14 +24,14 @@ public class ReflectionService {
 
     public Map<Method, String> getAllMethodsWithFieldNames(Class<?> type) {
         List<Method> allMethods = getAllMethods(new ArrayList<>(), type);
-        return allMethods.stream().map((Function<Method, Optional<Map.Entry<Method, String>>>) method -> {
-            if (getFieldNameForMethod(method).isPresent()) {
-                return Optional.of(new AbstractMap.SimpleImmutableEntry<>(method, getFieldNameForMethod(method).get()));
-            } else {
-                return Optional.empty();
-            }
-        }).filter(Optional::isPresent)
-                .collect(Collectors.toMap(p -> p.get().getKey(), p -> p.get().getValue()));
+        return allMethods.stream()
+                .map(method ->
+                        getFieldNameForMethod(method)
+                                .map((Function<String, Optional<Map.Entry<Method, String>>>) s ->
+                                        Optional.of(new AbstractMap.SimpleImmutableEntry<>(method, s)))
+                                .orElse(Optional.empty()))
+                .filter(Optional::isPresent)
+                .collect(Collectors.toMap(e -> e.get().getKey(), e -> e.get().getValue()));
     }
 
     public List<Method> getAllMethods(List<Method> methods, Class<?> type) {
