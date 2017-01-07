@@ -48,8 +48,7 @@ public class ReflectionService {
         try {
             info = Introspector.getBeanInfo(clazz);
             PropertyDescriptor[] props = info.getPropertyDescriptors();
-            return Arrays.stream(props)
-                    .map(pd -> {
+            return Arrays.stream(props).map(pd -> {
                 if (method.equals(pd.getWriteMethod()) || method.equals(pd.getReadMethod())) {
                     return pd.getName();
                 } else {
