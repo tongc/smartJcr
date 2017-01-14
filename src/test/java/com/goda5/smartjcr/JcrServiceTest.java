@@ -1,7 +1,12 @@
 package com.goda5.smartjcr;
 
-public class JcrServiceTest {
-    public void shouldSetProperties() {
+import org.junit.Test;
 
+public class JcrServiceTest {
+    @Test
+    public void shouldSetProperties() {
+        System.out.println(100 >> 1);
+        System.out.println(100 >>> 1);
+        System.out.println(100 << 1);
     }
 }
