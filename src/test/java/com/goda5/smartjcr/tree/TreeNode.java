@@ -36,8 +36,12 @@ public class TreeNode {
     public void depth(TreeNode node) {
         if (node != null) {
             System.out.println(node.val);
-            node.children.forEach(treeNode -> queue.add(treeNode));
-            breadthRec(queue.poll());
+            for (int i = node.children.size() - 1; i >= 0; i--) {
+                stack.add(node.children.get(i));
+            }
+            if (stack.size() != 0) {
+                depth(stack.pop());
+            }
         }
     }
 }
