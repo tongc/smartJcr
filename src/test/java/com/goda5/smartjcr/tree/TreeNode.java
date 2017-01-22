@@ -3,11 +3,13 @@ package com.goda5.smartjcr.tree;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Stack;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class TreeNode {
     public List<TreeNode> children = new ArrayList();
     public Queue<TreeNode> queue = new ArrayBlockingQueue<>(100);
+    public Stack<TreeNode> stack = new Stack<>();
     public String val;
 
     public TreeNode(String val) {
@@ -20,6 +22,22 @@ public class TreeNode {
             TreeNode poll = queue.poll();
             System.out.println(poll.val);
             poll.children.forEach(treeNode -> queue.add(treeNode));
+        }
+    }
+
+    public void breadthRec(TreeNode node) {
+        if (node != null) {
+            System.out.println(node.val);
+            node.children.forEach(treeNode -> queue.add(treeNode));
+            breadthRec(queue.poll());
+        }
+    }
+
+    public void depth(TreeNode node) {
+        if (node != null) {
+            System.out.println(node.val);
+            node.children.forEach(treeNode -> queue.add(treeNode));
+            breadthRec(queue.poll());
         }
     }
 }

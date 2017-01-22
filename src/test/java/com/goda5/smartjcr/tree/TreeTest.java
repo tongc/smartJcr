@@ -2,6 +2,12 @@ package com.goda5.smartjcr.tree;
 
 public class TreeTest {
     public static void main(String[] args) {
+        /**
+         *            root
+         *     1          2     3   456
+         *   11 12      21 22 31 32
+         * 111 112 113
+         */
         TreeNode root = new TreeNode("root");
         TreeNode t1 = new TreeNode("1");
         TreeNode t2 = new TreeNode("2");
@@ -39,5 +45,9 @@ public class TreeTest {
         t11.children.add(t113);
 
         root.breadth();
+        System.out.println("-----------------");
+        root.breadthRec(root);
+        System.out.println("-----------------");
+
     }
 }
