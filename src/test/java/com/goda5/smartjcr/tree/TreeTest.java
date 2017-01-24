@@ -24,6 +24,8 @@ public class TreeTest {
         TreeNode t111 = new TreeNode("111");
         TreeNode t112 = new TreeNode("112");
         TreeNode t113 = new TreeNode("113");
+        TreeNode t1131 = new TreeNode("1131");
+
         root.children.add(t1);
         root.children.add(t2);
         root.children.add(t3);
@@ -44,10 +46,15 @@ public class TreeTest {
         t11.children.add(t112);
         t11.children.add(t113);
 
+        t113.children.add(t1131);
+
         root.breadth();
         System.out.println("-----------------");
         root.breadthRec(root);
         System.out.println("-----------------");
         root.depth(root);
+        System.out.println("-----------------");
+        root.findDepth(root, 0);
+        System.out.println(root.result);
     }
 }
