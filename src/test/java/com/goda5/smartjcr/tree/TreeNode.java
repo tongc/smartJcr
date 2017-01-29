@@ -1,13 +1,10 @@
 package com.goda5.smartjcr.tree;
 
-import sun.reflect.generics.tree.Tree;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.function.Consumer;
 
 public class TreeNode {
     public List<TreeNode> children = new ArrayList();
@@ -49,12 +46,13 @@ public class TreeNode {
     }
 
     int result = 0;
+
     public void findDepth(TreeNode node, int sum) {
-        if(node.children == null || node.children.size() == 0) {
-            if(sum > result) {
+        if (node.children == null || node.children.size() == 0) {
+            if (sum > result) {
                 result = sum;
             }
         }
-        node.children.forEach(treeNode -> findDepth(treeNode, sum+1));
+        node.children.forEach(treeNode -> findDepth(treeNode, sum + 1));
     }
 }
